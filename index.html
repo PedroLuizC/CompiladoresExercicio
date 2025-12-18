@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExCompiladores | O Oratório Digital</title>
+    <!-- Fontes Temáticas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&family=Courier+Prime&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="background-overlay"></div>
+
+    <header class="main-header">
+        <div class="logo-area">
+            <h1>ExCompiladores</h1>
+            <span class="subtitle">O Grimório de Kaelil</span>
+        </div>
+        <nav class="nav-links">
+            <button class="nav-btn" data-module="teoria">Teoria</button>
+            <button class="nav-btn" data-module="chomsky">Chomsky</button>
+            <button class="nav-btn" data-module="greibach">Greibach</button>
+            <button class="nav-btn" data-module="ll">LL (Descendente)</button>
+            <button class="nav-btn" data-module="lr">LR (Ascendente Shift/reduce)</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Controles de Navegação das Questões -->
+        <section class="quest-controls">
+            <button id="prev-quest-btn" class="control-btn">❮ Anterior</button>
+            <span id="quest-title" class="quest-title">Carregando Enigma...</span>
+            <button id="next-quest-btn" class="control-btn">Próxima ❯</button>
+        </section>
+
+        <!-- O Pergaminho do Conteúdo -->
+        <section class="scroll-content">
+            <div id="steps-container" class="steps-area">
+                <!-- Os passos serão injetados aqui pelo JS -->
+            </div>
+            
+            <div class="scroll-footer">
+                <button id="reset-btn" class="action-btn secondary">Reiniciar Ritual</button>
+                <button id="advance-btn" class="action-btn primary">Avançar Etapa ✨</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="teoria.js"></script>
+    <script src="chomsky-script.js"></script>
+    <script src="greibach-script.js"></script>
+    <script src="ll-script.js"></script>
+    <script src="lr-script.js"></script>
+    <script src="motor.js"></script>
+</body>
+</html>
