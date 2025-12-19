@@ -30,38 +30,38 @@ const chomskyQuestions = [
                 title: "Etapa 4: Binarização (Quebra de Cadeias)",
                 theory: "O algoritmo exige árvores binárias. Regras com 3 ou mais variáveis devem ser quebradas em escada. A → BCD vira A → BE e E → CD.",
                 explanation: "A regra 'S → Ca A Cd' tem 3 variáveis. Criamos uma auxiliar D1 → A Cd.\nAssim, a regra original se torna S → Ca D1.",
-                result: "S → Ca D1 | Ca Cd | B Cc | ε\nD1 → A Cd\nA → B Cc\nB → A Cc | Cc | a\nCa → a\nCc → c\nCd → d"
+                result: "S → Ca D1 | Ca Cd | B Cc | ε\nA → B Cc\nB → A Cc | Cc | a\nD1 → A Cd\nCa → a\nCc → c\nCd → d"
             }
         ]
     },
     {
         id: 2,
-        title: "Enigma II: A Anulação em Massa",
+        title: "Enigma II: A Anulação em Massa (Corrigido)",
         initialGrammar: "S → A | B | ABS\nA → aA | ε\nB → aBAb | ε",
         steps: [
             {
                 title: "Etapa 1: Purificação do Vazio (Ritual Agressivo)",
-                theory: "Quando múltiplos símbolos (A, B) e o próprio S são anuláveis, usamos a lógica combinatória: para uma regra como ABS, geramos todas as permutações de desaparecimento.",
-                explanation: "S é anulável. A é anulável. B é anulável.\n\nExpandindo S → ABS:\n- Se A some: BS\n- Se B some: AS\n- Se S some: AB\n- Se A e B somem: S\n- Se A e S somem: B\n- Se B e S somem: A\n- Se todos somem: ε\n\nExpandindo B → aBAb:\n- Se B some: aAb\n- Se A some: aBb\n- Se ambos somem: ab",
+                theory: "Com A, B e S anuláveis, a regra S->ABS gera uma explosão combinatória. Devemos listar todas as permutações onde um ou mais símbolos desaparecem.",
+                explanation: "1. A e B são anuláveis. S é anulável (pois S->A).\n2. Expandindo S → ABS:\n   - Se A some: BS\n   - Se B some: AS\n   - Se S some: AB\n   - Se A e B somem: S\n   - Se A e S somem: B\n   - Se B e S somem: A\n   - Se todos somem: ε\n3. Expandindo B → aBAb:\n   - Se B some: aAb\n   - Se A some: aBb\n   - Se ambos somem: ab",
                 result: "S → A | B | ABS | BS | AS | AB | S | ε\nA → aA | a\nB → aBAb | aAb | aBb | ab"
             },
             {
                 title: "Etapa 2: Eliminação de Unitárias",
-                theory: "Removemos ciclos inúteis (S → S) e fazemos S herdar diretamente o poder de seus subordinados A e B.",
-                explanation: "1. Removemos S → S.\n2. S → A é substituído por {aA, a}.\n3. S → B é substituído por {aBAb, aAb, aBb, ab}.\n\nJuntamos isso com as regras não-unitárias que S já tinha (ABS, BS, AS, AB, ε).",
+                theory: "O General S deve assumir o comando. Removemos S->S e fazemos S herdar as regras de A e B.",
+                explanation: "1. Removemos S → S.\n2. Substituímos S → A por {aA, a}.\n3. Substituímos S → B por {aBAb, aAb, aBb, ab}.\n\nAgora S possui suas regras próprias (ABS, BS...) mais as herdadas.",
                 result: "S → ABS | BS | AS | AB | aA | a | aBAb | aAb | aBb | ab | ε\nA → aA | a\nB → aBAb | aAb | aBb | ab"
             },
             {
                 title: "Etapa 3: Isolação de Terminais",
-                theory: "Preparamos a gramática para a binarização isolando a matéria bruta ('a' e 'b') em variáveis 'Ca' e 'Cb' onde elas aparecem misturadas.",
-                explanation: "Criamos Ca → a e Cb → b.\nSubstituições:\n- aA → Ca A\n- aBAb → Ca B Ca Cb\n- aAb → Ca A Cb\n- aBb → Ca B Cb\n- ab → Ca Cb",
-                result: "S → A B S | B S | A S | A B | Ca A | a | Ca B Ca Cb | Ca A Cb | Ca B Cb | Ca Cb | ε\nA → Ca A | a\nB → Ca B Ca Cb | Ca A Cb | Ca B Cb | Ca Cb\nCa → a\nCb → b"
+                theory: "Separamos a matéria (terminais) da estrutura (variáveis). 'a' vira Ca, 'b' vira Cb.",
+                explanation: "Criamos Ca -> a e Cb -> b. Substituímos em todas as regras mistas de S e B:\n\n- aA vira Ca A\n- aBAb vira Ca B A Cb  <-- (Correção Crítica: O A é preservado)\n- aAb vira Ca A Cb\n- aBb vira Ca B Cb\n- ab vira Ca Cb",
+                result: "S → A B S | B S | A S | A B | Ca A | a | Ca B A Cb | Ca A Cb | Ca B Cb | Ca Cb | ε\nA → Ca A | a\nB → Ca B A Cb | Ca A Cb | Ca B Cb | Ca Cb\nCa → a\nCb → b"
             },
             {
                 title: "Etapa 4: Binarização (Final)",
-                theory: "A etapa mais complexa. Todas as cadeias longas devem ser reduzidas a pares usando variáveis auxiliares.",
-                explanation: "Vamos criar auxiliares para cada regra longa:\n\n1. S → A B S (vira A D1, onde D1 → B S)\n2. Regras longas vindas de B (como Ca B Ca Cb):\n   - Ca B Ca Cb vira Ca D2. D2 → B D3. D3 → Ca Cb.\n   - Ca A Cb vira Ca D4. D4 → A Cb.\n   - Ca B Cb vira Ca D5. D5 → B Cb.\n\nAplicamos essas auxiliares tanto em B quanto nas cópias que estão em S.",
-                result: "S → A D1 | B S | A S | A B | Ca A | a | Ca D2 | Ca D4 | Ca D5 | Ca Cb | ε\nA → Ca A | a\nB → Ca D2 | Ca D4 | Ca D5 | Ca Cb\n\n--- Variáveis Auxiliares ---\nD1 → B S\nD2 → B D3\nD3 → Ca Cb\nD4 → A Cb\nD5 → B Cb\nCa → a\nCb → b"
+                theory: "Quebramos as cadeias longas em pares. Atenção aos detalhes das variáveis auxiliares.",
+                explanation: "Precisamos binarizar as regras longas que estão em S e B:\n\n1. S → A B S: Vira S → A D1, onde D1 → B S.\n\n2. B → Ca B A Cb (Regra de tamanho 4):\n   - Criamos D2 → A Cb\n   - Criamos D3 → B D2\n   - Regra vira: B → Ca D3\n\n3. B → Ca A Cb (Tamanho 3):\n   - Reusamos D2 (A Cb) ou criamos novo.\n   - Regra vira: B → Ca D2\n\n4. B → Ca B Cb (Tamanho 3):\n   - Criamos D4 → B Cb\n   - Regra vira: B → Ca D4\n\n(S herda essas mesmas transformações para suas cópias dessas regras).",
+                result: "S → A D1 | B S | A S | A B | Ca A | a | Ca D3 | Ca D2 | Ca D4 | Ca Cb | ε\nA → Ca A | a\nB → Ca D3 | Ca D2 | Ca D4 | Ca Cb\n\n--- Auxiliares ---\nD1 → B S\nD2 → A Cb\nD3 → B D2\nD4 → B Cb\nCa → a\nCb → b"
             }
         ]
     },
